@@ -14,15 +14,31 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //register account
+        registerAccount()
+
+        //user taps on log in text
+        login_text_register.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun registerAccount() {
         register_btn_register.setOnClickListener {
             val email = email_edittext_register.text.toString()
             val password = password_edittext_register.text.toString()
 
+            //if username/pass is empty
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Email/password cannot be blank!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             Log.d("MainActivity", "Email is $email")
             Log.d("MainActivity", "Password is $password")
 
-            lateinit var auth: FirebaseAuth
-            auth = FirebaseAuth.getInstance()
+            var auth: FirebaseAuth = FirebaseAuth.getInstance()
 
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener {
@@ -35,14 +51,10 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
                 .addOnFailureListener {
+                    //handle failure
                     Log.d("MainActivity", "Failed to create user: ${it.message}")
                     Toast.makeText(this, "Failed: ${it.message}", Toast.LENGTH_SHORT).show()
                 }
-        }
-
-        login_text_register.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
         }
     }
 }
