@@ -12,10 +12,10 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         login_btn_login.setOnClickListener {
-            val emailAddrs = email_edittext_login.text.toString()
+            val email = email_edittext_login.text.toString()
             val password = password_edittext_login.text.toString()
 
-            Log.d("LoginActivity", "Email is " + emailAddrs)
+            Log.d("LoginActivity", "Email is $email")
             Log.d("LoginActivity", "Password is $password")
         }
 

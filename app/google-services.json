@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "34264505266",
+    "firebase_url": "https://kmessage-2804a.firebaseio.com",
+    "project_id": "kmessage-2804a",
+    "storage_bucket": "kmessage-2804a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34264505266:android:89f53b8a47b3c20ba9a2ab",
+        "android_client_info": {
+          "package_name": "com.thesherlockhomie.kmessage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "34264505266-bsvg9oqa71bt8nbq2f2j3fdqkejqdn9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCk0CLN3VsN44BMa5Vj4-P9NWethP_bVH8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "34264505266-bsvg9oqa71bt8nbq2f2j3fdqkejqdn9s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
