@@ -9,10 +9,13 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_register.*
 import java.util.*
+
+class User(val uid: String, val username: String, val profilePhotoUrl: String)
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -61,6 +64,13 @@ class RegisterActivity : AppCompatActivity() {
         register_btn_register.setOnClickListener {
             val email = email_edittext_register.text.toString()
             val password = password_edittext_register.text.toString()
+            val username = username_edittext_register.text.toString()
+
+            //if username empty
+            if (username.isEmpty()) {
+                Toast.makeText(this, "Username cannot be empty!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
             //if username/pass is empty
             if (email.isEmpty() || password.isEmpty()) {
@@ -82,7 +92,7 @@ class RegisterActivity : AppCompatActivity() {
                         "RegisterActivity",
                         "Successfuly created user with uid: ${it.result?.user?.uid}"
                     )
-                    uploadPhotoToFB()
+                    uploadPhotoToFB() //which also adds user to db
                 }
                 .addOnFailureListener {
                     //handle failure
@@ -92,19 +102,42 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun uploadPhotoToFB() {
+    private fun uploadPhotoToFB(): Uri? {
         if (selectedPhotoUri == null)
-            return
+            return null
 
         val filename = UUID.randomUUID().toString()
+        var photoUrl: Uri? = null
         var storageRef = Firebase.storage.reference.child("/photos/$filename")
         storageRef.putFile(selectedPhotoUri!!)
             .addOnSuccessListener {
                 Log.d("RegisterActivity", "Uploaded image with filename $filename")
+                storageRef.downloadUrl.addOnSuccessListener {
+                    Log.d("RegisterActivity", "Image location: $it")
+                    photoUrl = it
+                    saveUserToFb(photoUrl!!)
+                }
             }
             .addOnFailureListener {
                 Log.d("RegisterActivity", "Failed to upload image: ${it.message}")
                 Toast.makeText(this, "Failed to upload image: ${it.message}", Toast.LENGTH_SHORT)
             }
+        return photoUrl
+    }
+
+    private fun saveUserToFb(photoUrl: Uri) {
+        val uid = FirebaseAuth.getInstance().uid ?: ""
+        val username = username_edittext_register.text.toString()
+        val user = User(uid, username, photoUrl.toString())
+
+        var dbRef = Firebase.database.getReference("/users/$uid")
+        dbRef.setValue(user)
+            .addOnSuccessListener {
+                Log.d("RegisterActivity", "Saved user to database")
+            }
+            .addOnFailureListener {
+                Log.d("RegisterActivity", "Could not save user to database :(")
+            }
     }
 }
+
