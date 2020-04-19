@@ -6,13 +6,13 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_register.*
 
-class MainActivity : AppCompatActivity() {
+class RegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_register)
 
         //register account
         registerAccount()
@@ -35,8 +35,8 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            Log.d("MainActivity", "Email is $email")
-            Log.d("MainActivity", "Password is $password")
+            Log.d("RegisterActivity", "Email is $email")
+            Log.d("RegisterActivity", "Password is $password")
 
             var auth: FirebaseAuth = FirebaseAuth.getInstance()
 
@@ -46,13 +46,13 @@ class MainActivity : AppCompatActivity() {
 
                     //else if successful
                     Log.d(
-                        "MainActivity",
+                        "RegisterActivity",
                         "Successfuly created user with uid: ${it.result?.user?.uid}"
                     )
                 }
                 .addOnFailureListener {
                     //handle failure
-                    Log.d("MainActivity", "Failed to create user: ${it.message}")
+                    Log.d("RegisterActivity", "Failed to create user: ${it.message}")
                     Toast.makeText(this, "Failed: ${it.message}", Toast.LENGTH_SHORT).show()
                 }
         }
