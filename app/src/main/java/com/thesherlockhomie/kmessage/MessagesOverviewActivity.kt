@@ -25,7 +25,8 @@ class MessagesOverviewActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.newmessage_menu_item -> {
-
+                var intent = Intent(this, NewMessageActivity::class.java)
+                startActivity(intent)
             }
 
             R.id.logout_menu_item -> {
