@@ -1,5 +1,6 @@
 package com.thesherlockhomie.kmessage
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -47,6 +48,11 @@ class LoginActivity : AppCompatActivity() {
                         "LoginActivity",
                         "Successfully signed in user with uid: ${it.result?.user?.uid}"
                     )
+
+                    //launch messages overview activity
+                    var intent = Intent(this, MessagesOverviewActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
                 }
                 .addOnFailureListener {
                     //handle failure

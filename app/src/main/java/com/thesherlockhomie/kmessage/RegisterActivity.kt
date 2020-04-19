@@ -92,7 +92,8 @@ class RegisterActivity : AppCompatActivity() {
                         "RegisterActivity",
                         "Successfuly created user with uid: ${it.result?.user?.uid}"
                     )
-                    uploadPhotoToFB() //which also adds user to db
+                    uploadPhotoToFB() //which also adds user to db and launches messages overview activity
+
                 }
                 .addOnFailureListener {
                     //handle failure
@@ -134,6 +135,11 @@ class RegisterActivity : AppCompatActivity() {
         dbRef.setValue(user)
             .addOnSuccessListener {
                 Log.d("RegisterActivity", "Saved user to database")
+
+                //launch messages overview activity
+                var intent = Intent(this, MessagesOverviewActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
             }
             .addOnFailureListener {
                 Log.d("RegisterActivity", "Could not save user to database :(")
