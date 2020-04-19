@@ -1,7 +1,10 @@
 package com.thesherlockhomie.kmessage
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -10,9 +13,14 @@ import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : AppCompatActivity() {
 
+    var selectedPhotoUri: Uri? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+
+        //allow user to select photo
+        setPhoto()
 
         //register account
         registerAccount()
@@ -21,6 +29,28 @@ class RegisterActivity : AppCompatActivity() {
         login_text_register.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
+            Log.d("RegisterActivity", "User selected photo")
+
+            selectedPhotoUri = data.data
+            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedPhotoUri)
+
+            addphoto_btn_register.alpha = 0f
+            photo_image_register.setImageBitmap(bitmap)
+        }
+    }
+
+    private fun setPhoto() {
+        addphoto_btn_register.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, 0)
         }
     }
 
