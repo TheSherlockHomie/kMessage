@@ -9,7 +9,10 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_register.*
+import java.util.*
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -79,6 +82,7 @@ class RegisterActivity : AppCompatActivity() {
                         "RegisterActivity",
                         "Successfuly created user with uid: ${it.result?.user?.uid}"
                     )
+                    uploadPhotoToFB()
                 }
                 .addOnFailureListener {
                     //handle failure
@@ -86,5 +90,21 @@ class RegisterActivity : AppCompatActivity() {
                     Toast.makeText(this, "Failed: ${it.message}", Toast.LENGTH_SHORT).show()
                 }
         }
+    }
+
+    private fun uploadPhotoToFB() {
+        if (selectedPhotoUri == null)
+            return
+
+        val filename = UUID.randomUUID().toString()
+        var storageRef = Firebase.storage.reference.child("/photos/$filename")
+        storageRef.putFile(selectedPhotoUri!!)
+            .addOnSuccessListener {
+                Log.d("RegisterActivity", "Uploaded image with filename $filename")
+            }
+            .addOnFailureListener {
+                Log.d("RegisterActivity", "Failed to upload image: ${it.message}")
+                Toast.makeText(this, "Failed to upload image: ${it.message}", Toast.LENGTH_SHORT)
+            }
     }
 }
