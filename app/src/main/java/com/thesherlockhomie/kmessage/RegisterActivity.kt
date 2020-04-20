@@ -15,7 +15,11 @@ import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_register.*
 import java.util.*
 
-class User(val uid: String, val username: String, val profilePhotoUrl: String)
+class User(val uid: String, val username: String, val profilePhotoUrl: String) {
+    constructor() : this(
+        "", "", ""
+    )
+}
 
 class RegisterActivity : AppCompatActivity() {
 
