@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profilephoto_image_chatitem"
+        android:id="@+id/profilephoto_image_chatitem_rec"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="4dp"
@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/message_text_chatitem"
+        android:id="@+id/message_text_chatitem_rec"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -27,7 +27,7 @@
         android:paddingRight="16dp"
         android:paddingBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/profilephoto_image_chatitem"
-        app:layout_constraintTop_toTopOf="@+id/profilephoto_image_chatitem" />
+        app:layout_constraintEnd_toStartOf="@+id/profilephoto_image_chatitem_rec"
+        app:layout_constraintTop_toTopOf="@+id/profilephoto_image_chatitem_rec" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

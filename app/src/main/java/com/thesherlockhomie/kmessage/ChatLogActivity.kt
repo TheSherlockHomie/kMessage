@@ -7,6 +7,7 @@ import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.android.synthetic.main.layout_chatitem_rec.view.*
+import kotlinx.android.synthetic.main.layout_chatitem_sent.view.*
 
 class ChatLogActivity : AppCompatActivity() {
 
@@ -41,7 +42,7 @@ class ChatItemSent : Item<GroupieViewHolder>() {
     }
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.message_text_chatitem.text =
+        viewHolder.itemView.message_text_chatitem_sent.text =
             "This is a really long message just to see if this works fine, does it? It does not.hvsdhvhhjsgchhhdsbhcvshhcvshvh"
     }
 
@@ -53,7 +54,7 @@ class ChatItemRec : Item<GroupieViewHolder>() {
     }
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.message_text_chatitem.text =
+        viewHolder.itemView.message_text_chatitem_rec.text =
             "This is a really long message just to see if this works fine, does it? It does not.hvsdhvhhjsgchhhdsbhcvshhcvshvh"
     }
 
