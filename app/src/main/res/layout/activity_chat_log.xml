@@ -13,6 +13,7 @@
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
         android:background="@android:color/holo_green_light"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/message_edittext_chatlog"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
