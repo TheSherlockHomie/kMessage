@@ -8,5 +8,8 @@ class ChatLogActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
+
+        val user = intent.getParcelableExtra<User>("USER_KEY")
+        supportActionBar?.title = user.username.toString()
     }
 }

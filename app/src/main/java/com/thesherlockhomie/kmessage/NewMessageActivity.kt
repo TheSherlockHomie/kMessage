@@ -1,5 +1,6 @@
 package com.thesherlockhomie.kmessage
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_new_message.*
 import kotlinx.android.synthetic.main.layout_userrow_newmessage.view.*
 
 class NewMessageActivity : AppCompatActivity() {
+    val USER_KEY = "USER_KEY"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +37,13 @@ class NewMessageActivity : AppCompatActivity() {
                     if (user != null) {
                         adapter.add(UserItem(user))
                     }
+                }
+                adapter.setOnItemClickListener { item, view ->
+                    val userItem = item as UserItem
+                    var intent = Intent(view.context, ChatLogActivity::class.java)
+                    intent.putExtra(USER_KEY, userItem.user)
+                    startActivity(intent)
+                    finish()
                 }
                 recyclerview_view_newmessage.adapter = adapter
             }
