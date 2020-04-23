@@ -2,12 +2,14 @@ package com.thesherlockhomie.kmessage
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
@@ -17,15 +19,19 @@ import kotlinx.android.synthetic.main.layout_chatitem_sent.view.*
 import java.lang.System.currentTimeMillis
 
 class ChatLogActivity : AppCompatActivity() {
-    val LOGGING_KEY = "ChatLogActivity"
+    companion object {
+        const val LOGGING_KEY = "ChatLogActivity"
+    }
+
     val adapter = GroupAdapter<GroupieViewHolder>()
+    var toUser: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
 
-        val user = intent.getParcelableExtra<User>("USER_KEY")
-        supportActionBar?.title = user.username.toString()
+        toUser = intent.getParcelableExtra<User>("USER_KEY")
+        supportActionBar?.title = toUser?.username.toString()
 
         recyclerview_view_chatlog.adapter = adapter
 
@@ -41,19 +47,24 @@ class ChatLogActivity : AppCompatActivity() {
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 val chat = p0.getValue(Message::class.java)
-                val me = FirebaseAuth.getInstance().uid.toString()
-
+                val currentUser = MessagesOverviewActivity.user ?: return
+                val me = currentUser.uid
                 if (chat != null) {
                     if (chat.from == me) {
-                        adapter.add(ChatItemSent(chat))
+                        adapter.add(ChatItemSent(chat, currentUser))
                     } else {
-                        adapter.add(ChatItemRec(chat))
+                        adapter.add(ChatItemRec(chat, toUser ?: return))
                     }
                 }
             }
 
             override fun onCancelled(p0: DatabaseError) {
-
+                Log.e(LOGGING_KEY, "Couldn\'t get messages: ${p0.message}")
+                Toast.makeText(
+                    this@ChatLogActivity,
+                    "Couldn\'t get messages: ${p0.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
             override fun onChildMoved(p0: DataSnapshot, p1: String?) {
@@ -92,24 +103,30 @@ class ChatLogActivity : AppCompatActivity() {
     }
 }
 
-class ChatItemSent(private val chat: Message) : Item<GroupieViewHolder>() {
+class ChatItemSent(private val chat: Message, val user: User) : Item<GroupieViewHolder>() {
     override fun getLayout(): Int {
         return R.layout.layout_chatitem_sent
     }
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.message_text_chatitem_sent.text = chat.text.toString()
+        val imageUrl = user.profilePhotoUrl.toString()
+        val target = viewHolder.itemView.profilephoto_image_chatitem_sent
+        Picasso.get().load(imageUrl).into(target)
     }
 
 }
 
-class ChatItemRec(private val chat: Message) : Item<GroupieViewHolder>() {
+class ChatItemRec(private val chat: Message, val user: User) : Item<GroupieViewHolder>() {
     override fun getLayout(): Int {
         return R.layout.layout_chatitem_rec
     }
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.message_text_chatitem_rec.text = chat.text.toString()
+        val imageUrl = user.profilePhotoUrl.toString()
+        val target = viewHolder.itemView.profilephoto_image_chatitem_rec
+        Picasso.get().load(imageUrl).into(target)
     }
 
 }
