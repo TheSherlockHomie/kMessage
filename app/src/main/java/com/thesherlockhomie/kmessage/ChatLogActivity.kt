@@ -42,7 +42,9 @@ class ChatLogActivity : AppCompatActivity() {
     }
 
     private fun fetchMessages() {
-        val ref = FirebaseDatabase.getInstance().getReference("/messages")
+        val to = toUser?.uid.toString()
+        val from = MessagesOverviewActivity.user?.uid.toString()
+        val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$to/$from")
         ref.addChildEventListener(object : ChildEventListener {
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
@@ -88,15 +90,30 @@ class ChatLogActivity : AppCompatActivity() {
             val text = message_edittext_chatlog.text.toString()
             val to = intent.getParcelableExtra<User>("USER_KEY").uid.toString()
             if (text != null && from != null) {
-                val ref = FirebaseDatabase.getInstance().getReference("/messages/").push()
+                val ref =
+                    FirebaseDatabase.getInstance().getReference("/user-messages/$from/$to").push()
+                val ref2 =
+                    FirebaseDatabase.getInstance().getReference("/user-messages/$to/$from").push()
                 val id = ref.key.toString()
                 val chat = Message(id, text, from, to, currentTimeMillis())
                 ref.setValue(chat)
                     .addOnCompleteListener {
                         Log.d(LOGGING_KEY, "Sent message with id $id")
+                        message_edittext_chatlog.text.clear()
+                        recyclerview_view_chatlog.scrollToPosition(adapter.itemCount - 1)
                     }
                     .addOnFailureListener {
                         Log.e(LOGGING_KEY, "Failed to send message: ${it.message.toString()}")
+                    }
+                ref2.setValue(chat)
+                    .addOnCompleteListener {
+                        Log.d(LOGGING_KEY, "Sent message2 with id $id")
+                    }
+                    .addOnFailureListener {
+                        Log.e(
+                            LOGGING_KEY,
+                            "Partially failed to send message: ${it.message.toString()}"
+                        )
                     }
             }
         }
