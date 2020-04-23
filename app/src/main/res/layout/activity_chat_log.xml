@@ -29,7 +29,7 @@
         android:background="@android:color/white"
         android:ems="10"
         android:hint="Type a message"
-        android:inputType="textPersonName"
+        android:inputType="textMultiLine"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
