@@ -44,7 +44,7 @@ class ChatLogActivity : AppCompatActivity() {
                 val me = FirebaseAuth.getInstance().uid.toString()
 
                 if (chat != null) {
-                    if (chat.from != me) {
+                    if (chat.from == me) {
                         adapter.add(ChatItemSent(chat))
                     } else {
                         adapter.add(ChatItemRec(chat))
