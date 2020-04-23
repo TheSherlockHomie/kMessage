@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -33,7 +36,39 @@ class ChatLogActivity : AppCompatActivity() {
     }
 
     private fun fetchMessages() {
-        //TODO
+        val ref = FirebaseDatabase.getInstance().getReference("/messages")
+        ref.addChildEventListener(object : ChildEventListener {
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val chat = p0.getValue(Message::class.java)
+                val me = FirebaseAuth.getInstance().uid.toString()
+
+                if (chat != null) {
+                    if (chat.from != me) {
+                        adapter.add(ChatItemSent(chat))
+                    } else {
+                        adapter.add(ChatItemRec(chat))
+                    }
+                }
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+
+            }
+
+        })
     }
 
     private fun sendMessages() {
@@ -57,26 +92,24 @@ class ChatLogActivity : AppCompatActivity() {
     }
 }
 
-class ChatItemSent : Item<GroupieViewHolder>() {
+class ChatItemSent(private val chat: Message) : Item<GroupieViewHolder>() {
     override fun getLayout(): Int {
         return R.layout.layout_chatitem_sent
     }
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.message_text_chatitem_sent.text =
-            "This is a really long message just to see if this works fine, does it? It does not.hvsdhvhhjsgchhhdsbhcvshhcvshvh"
+        viewHolder.itemView.message_text_chatitem_sent.text = chat.text.toString()
     }
 
 }
 
-class ChatItemRec : Item<GroupieViewHolder>() {
+class ChatItemRec(private val chat: Message) : Item<GroupieViewHolder>() {
     override fun getLayout(): Int {
         return R.layout.layout_chatitem_rec
     }
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.message_text_chatitem_rec.text =
-            "This is a really long message just to see if this works fine, does it? It does not.hvsdhvhhjsgchhhdsbhcvshhcvshvh"
+        viewHolder.itemView.message_text_chatitem_rec.text = chat.text.toString()
     }
 
 }
